@@ -6,7 +6,7 @@ Created: 2026-10-09
 
 **Project directory:** `~/Codebase/personal/learning/ielts`
 
-**Current status:** Implementation started on 2026-10-09. Both datasets were prepared in a private Kaggle CPU notebook and published as private version-1 Kaggle datasets. ELLIPSE has 3,324/587/2,571 train/validation/test rows; IELTS has 7,069/529/450. The project implements ModernBERT with plain and MoE regression heads; local correctness tests passed. GPU smoke testing is next. See `reports/run_status.json` for current remote run states and `reports/data_audit.md` for the light preparation report. No Hugging Face model has been published.
+**Current status:** Implementation started on 2026-10-09. Both datasets were prepared in a private Kaggle CPU notebook and published as private version-1 Kaggle datasets. ELLIPSE has 3,324/587/2,571 train/validation/test rows; IELTS has 7,069/529/450. The project implements ModernBERT with plain and MoE regression heads; local correctness tests passed. Both GPU smoke tests passed; the private ELLIPSE and IELTS full comparisons are running. See `reports/run_status.json` for current remote run states and `reports/data_audit.md` for the light preparation report. No Hugging Face model has been published.
 
 **Agreed scope update:** Focus on model training with light automated data cleaning. Use Kaggle GPU notebooks, ModernBERT-base first, a four-expert multi-gate MoE comparison, and optional Ettin-150m follow-up. DistilBERT is no longer required. The two tracks remain separate. Prepared outputs were briefly staged locally to create private Kaggle Dataset versions; raw source downloads occurred in the remote preparation job.
 

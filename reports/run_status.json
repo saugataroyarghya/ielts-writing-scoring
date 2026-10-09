@@ -39,7 +39,48 @@
     "used_gpu_count": 1,
     "source_hash": "fa84e3187b98e39ebeaa65b4ac51bb906d08816f3ee742001ad4d884c0ba4edc"
   },
-  "full_training": [],
+  "full_training": [
+    {
+      "track": "ellipse",
+      "notebook": "saugataroyarghya/essay-scoring-ellipse-train",
+      "version": 1,
+      "status": "running",
+      "heads": [
+        "mlp",
+        "moe"
+      ],
+      "seed": 42,
+      "epoch_cap": 5,
+      "requested_accelerator": "NvidiaTeslaT4",
+      "source_hash": "45f6f1abb611e362aab12d14e10dc58cbe61a51b45bc309a740b7539ccb9199a",
+      "automatic_next_steps": [
+        "select head using validation MAE",
+        "evaluate selected checkpoint on frozen test",
+        "stage private release bundle",
+        "verify fresh CPU inference"
+      ]
+    },
+    {
+      "track": "ielts",
+      "notebook": "saugataroyarghya/essay-scoring-ielts-train",
+      "version": 1,
+      "status": "running",
+      "heads": [
+        "mlp",
+        "moe"
+      ],
+      "seed": 42,
+      "epoch_cap": 5,
+      "requested_accelerator": "NvidiaTeslaT4",
+      "source_hash": "45f6f1abb611e362aab12d14e10dc58cbe61a51b45bc309a740b7539ccb9199a",
+      "automatic_next_steps": [
+        "select head using validation MAE",
+        "evaluate selected checkpoint on frozen test",
+        "stage private release bundle",
+        "verify fresh CPU inference"
+      ]
+    }
+  ],
   "public_release": "not started",
   "local_checks": {
     "tests_passed": 11,
@@ -49,5 +90,6 @@
     "ellipse_validation_mae": 0.43844574330090885,
     "ielts_validation_mae": 1.389510724050729,
     "model": "word/character TF-IDF + Ridge"
-  }
+  },
+  "code_commit": "ed09ac5"
 }
