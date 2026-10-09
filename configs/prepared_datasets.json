@@ -1,0 +1,22 @@
+{
+  "ellipse": {
+    "kaggle_dataset": "saugataroyarghya/ellipse-writing-scoring-private",
+    "version": 1,
+    "prepared_sha256": {
+      "train.parquet": "37416c7e91aa4e73b45f575bd953bcf0480d1e370a4de01a09433e837455e7f5",
+      "validation.parquet": "93982b8698625937ae9d429bb412140cd777499a7c162fdeaa4e18eefbae1a6b",
+      "test.parquet": "7d6d5422a426336a580aab177ebb4089185dfbe0bd302fc8606cb7cff8fe3f38"
+    },
+    "source_revision": "dc3b8f0b3b4332fc9f64302c4ccfc4ed582f4b43"
+  },
+  "ielts": {
+    "kaggle_dataset": "saugataroyarghya/ielts-writing-scoring-private",
+    "version": 1,
+    "prepared_sha256": {
+      "train.parquet": "f7a871f0f2d34fcd7f07a2d53701daf94094bc7bb1ec30cfd5a77c3637109cd3",
+      "validation.parquet": "f57f6800e4d0c7102ef7974b17c282f6be2b8f573d97071d5d1e6c54f8396100",
+      "test.parquet": "19784f2740b39d1fbb58b8e277a50ebf9a3b91c7f909590eca84ccb38af3eac6"
+    },
+    "source_revision": "fa42fa7a2b02941e002cfbf5146c3176ba21f413"
+  }
+}

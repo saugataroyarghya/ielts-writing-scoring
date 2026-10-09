@@ -1,0 +1,53 @@
+{
+  "last_verified_date": "2026-10-09",
+  "kaggle_owner": "saugataroyarghya",
+  "preparation": {
+    "notebook": "saugataroyarghya/essay-scoring-data-preparation",
+    "version": 1,
+    "status": "complete"
+  },
+  "datasets": {
+    "ellipse": {
+      "id": "saugataroyarghya/ellipse-writing-scoring-private",
+      "version": 1,
+      "status": "ready",
+      "private": true
+    },
+    "ielts": {
+      "id": "saugataroyarghya/ielts-writing-scoring-private",
+      "version": 1,
+      "status": "ready",
+      "private": true
+    }
+  },
+  "smoke": {
+    "notebook": "saugataroyarghya/essay-scoring-ellipse-smoke",
+    "version": 2,
+    "status": "complete",
+    "requested_accelerator": "NvidiaL4",
+    "heads": [
+      "mlp",
+      "moe"
+    ],
+    "previous_attempt": {
+      "version": 1,
+      "status": "error",
+      "reason": "Preparation-only pyzipper import during training; fixed with lazy import."
+    },
+    "actual_gpu": "Tesla T4",
+    "allocated_gpu_count": 2,
+    "used_gpu_count": 1,
+    "source_hash": "fa84e3187b98e39ebeaa65b4ac51bb906d08816f3ee742001ad4d884c0ba4edc"
+  },
+  "full_training": [],
+  "public_release": "not started",
+  "local_checks": {
+    "tests_passed": 11,
+    "ruff": "passed"
+  },
+  "baselines": {
+    "ellipse_validation_mae": 0.43844574330090885,
+    "ielts_validation_mae": 1.389510724050729,
+    "model": "word/character TF-IDF + Ridge"
+  }
+}

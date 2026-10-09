@@ -1,0 +1,15 @@
+{
+  "packages": {
+    "torch": "2.10.0",
+    "transformers": "4.57.6",
+    "huggingface-hub": "0.36.0",
+    "safetensors": "0.7.0",
+    "pandas": "2.3.3",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.8.0"
+  },
+  "cuda": null,
+  "gpu": null,
+  "gpu_count": 0,
+  "gpu_memory_gb": 0
+}

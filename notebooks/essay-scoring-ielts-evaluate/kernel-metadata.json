@@ -1,0 +1,19 @@
+{
+  "id": "saugataroyarghya/essay-scoring-ielts-evaluate",
+  "title": "Essay Scoring Ielts Evaluate",
+  "code_file": "run.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "saugataroyarghya/ielts-writing-scoring-private"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [
+    "saugataroyarghya/essay-scoring-ielts-train"
+  ],
+  "model_sources": [],
+  "machine_shape": "NvidiaTeslaT4"
+}

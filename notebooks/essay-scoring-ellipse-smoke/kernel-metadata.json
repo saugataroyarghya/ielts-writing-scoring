@@ -1,0 +1,17 @@
+{
+  "id": "saugataroyarghya/essay-scoring-ellipse-smoke",
+  "title": "Essay Scoring Ellipse Smoke",
+  "code_file": "run.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "saugataroyarghya/ellipse-writing-scoring-private"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": [],
+  "machine_shape": "NvidiaL4"
+}

@@ -1,0 +1,20 @@
+{
+  "ellipse": {
+    "revision": "dc3b8f0b3b4332fc9f64302c4ccfc4ed582f4b43",
+    "source": "https://github.com/scrosseye/ELLIPSE-Corpus",
+    "license": "CC-BY-NC-SA-4.0"
+  },
+  "ielts": {
+    "revision": "fa42fa7a2b02941e002cfbf5146c3176ba21f413",
+    "source": "https://huggingface.co/datasets/chillies/ielts-writing-task2-essays",
+    "license": "CC-BY-4.0 (uploader claim; original-source rights unresolved)"
+  },
+  "modernbert": {
+    "model_id": "answerdotai/ModernBERT-base",
+    "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+  },
+  "ettin": {
+    "model_id": "jhu-clsp/ettin-encoder-150m",
+    "revision": "45d08642849e5c5701b162671ac811b7654bfd9f"
+  }
+}
