@@ -21,6 +21,8 @@ def cell(kind, source):
 
 
 def build(mode, track="ellipse", head="mlp"):
+    if mode == "transfer" and (track != "ielts" or head != "both"):
+        raise ValueError("Transfer mode requires --track ielts --head both.")
     files = sorted([*ROOT.glob("src/**/*.py"), *ROOT.glob("configs/*.json"), ROOT / "pyproject.toml"])
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -32,6 +34,8 @@ def build(mode, track="ellipse", head="mlp"):
     digest = hashlib.sha256(buf.getvalue()).hexdigest()
     if mode == "prepare":
         slug, title = "essay-scoring-data-preparation", "Essay Scoring Data Preparation"
+    elif mode == "transfer":
+        slug, title = "essay-scoring-ellipse-to-ielts-transfer", "Essay Scoring ELLIPSE to IELTS Transfer"
     elif mode in {"smoke", "evaluate"}:
         slug = f"essay-scoring-{track}-smoke"
         if mode == "evaluate":
@@ -78,7 +82,53 @@ print("Prepared datasets saved. No GPU was used.")
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "--target", dependencies, "transformers==4.57.6", "huggingface-hub==0.36.0", "tokenizers==0.22.2", "safetensors==0.7.0"], check=True)
 os.environ["PYTHONPATH"] = dependencies + os.pathsep + os.environ["PYTHONPATH"]
 '''
-        if mode == "evaluate":
+        if mode == "transfer":
+            run += f'''sys.path[:0] = [dependencies, str(project / "src")]
+from ielts_scoring.transfer import audit_overlap, find_checkpoint
+import torch
+parent = find_checkpoint("/kaggle/input", "ellipse", "mlp")
+baseline = {{name: find_checkpoint("/kaggle/input", "ielts", name) for name in ["mlp", "moe"]}}
+frozen = json.loads((project / "configs/transfer.json").read_text())
+with (parent / "model.safetensors").open("rb") as handle:
+    assert hashlib.file_digest(handle, "sha256").hexdigest() == frozen["initialization"]["checkpoint_sha256"]
+for name, path in baseline.items():
+    with (path / "model.safetensors").open("rb") as handle:
+        assert hashlib.file_digest(handle, "sha256").hexdigest() == frozen["baseline_checkpoint_sha256"][name]
+overlap = audit_overlap("/kaggle/input")
+pathlib.Path("/kaggle/working/transfer_overlap_audit.json").write_text(json.dumps(overlap, indent=2))
+print("Transfer source verified:", parent, overlap, flush=True)
+gpu_count = torch.cuda.device_count()
+if gpu_count == 0:
+    raise RuntimeError("Kaggle did not allocate a GPU.")
+# Benchmark sequentially on the same idle GPU; never alongside training.
+def latency(paths, filename):
+    subprocess.run([sys.executable, "-m", "ielts_scoring.benchmark", "--mlp", str(paths["mlp"]),
+                    "--moe", str(paths["moe"]), "--device", "cuda:0", "--precisions", "float32", "float16",
+                    "--output", "/kaggle/working/" + filename], check=True)
+latency(baseline, "inference_latency_gpu_baseline.json")
+processes = []
+for index, head_name in enumerate(["mlp", "moe"]):
+    command = [sys.executable, "-m", "ielts_scoring.train", "--track", "ielts", "--head", head_name,
+               "--mode", "train", "--data-root", "/kaggle/input", "--init-checkpoint", str(parent),
+               "--output", "/kaggle/working/" + head_name, "--source-hash", {digest!r}]
+    worker_env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(index % gpu_count))
+    if gpu_count > 1:
+        processes.append((head_name, subprocess.Popen(command, env=worker_env)))
+    else:
+        subprocess.run(command, env=worker_env, check=True)
+failures = [(name, process.wait()) for name, process in processes]
+if any(code != 0 for _, code in failures):
+    raise RuntimeError("A transfer run failed: " + repr(failures))
+subprocess.run([sys.executable, "-m", "ielts_scoring.transfer", "--runs", "/kaggle/working",
+                "--output", "/kaggle/working/transfer_validation_comparison.json"], check=True)
+latency({{name: pathlib.Path("/kaggle/working") / name / "best" for name in ["mlp", "moe"]}},
+        "inference_latency_gpu_transfer.json")
+subprocess.run([sys.executable, "-m", "ielts_scoring.diagnostics", "--runs", "/kaggle/working",
+                "--output", "/kaggle/working/validation_diagnostics.json"], check=True)
+subprocess.run([sys.executable, "-m", "ielts_scoring.finalize", "--track", "ielts",
+                "--runs", "/kaggle/working"], check=True)
+'''
+        elif mode == "evaluate":
             run += f'''subprocess.run([sys.executable, "-m", "ielts_scoring.finalize", "--track", {track!r}], check=True)
 '''
         elif mode == "train" and head == "both":
@@ -121,6 +171,9 @@ subprocess.run([sys.executable, "-m", "ielts_scoring.finalize", "--track", {trac
     }
     if mode == "evaluate":
         metadata["kernel_sources"] = [f"{OWNER}/essay-scoring-{track}-train"]
+    if mode == "transfer":
+        metadata["kernel_sources"] = [f"{OWNER}/essay-scoring-ellipse-train", f"{OWNER}/essay-scoring-ielts-train"]
+        metadata["dataset_sources"].append(f"{OWNER}/ellipse-writing-scoring-private")
     if mode != "prepare":
         metadata["machine_shape"] = "NvidiaTeslaT4"
     (notebook_dir / "kernel-metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
@@ -129,7 +182,7 @@ subprocess.run([sys.executable, "-m", "ielts_scoring.finalize", "--track", {trac
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["prepare", "smoke", "train", "evaluate"])
+    parser.add_argument("mode", choices=["prepare", "smoke", "train", "evaluate", "transfer"])
     parser.add_argument("--track", default="ellipse", choices=["ellipse", "ielts"])
     parser.add_argument("--head", default="mlp", choices=["mlp", "moe", "both"])
     args = parser.parse_args()

@@ -1,4 +1,4 @@
-"""Select the head on validation, evaluate its untouched test set, and stage a release."""
+"""Select the head on validation, evaluate its held-out test set, and stage a release."""
 
 import argparse
 import json
@@ -64,12 +64,21 @@ def main():
     for key in ["model_id", "revision", "dataset_checksums", "max_length", "seed", "encoder_lr", "head_lr"]:
         if candidates["mlp"]["config"][key] != candidates["moe"]["config"][key]:
             raise ValueError(f"Comparison differs in {key}; review before test evaluation.")
+    if candidates["mlp"]["config"].get("initialization") != candidates["moe"]["config"].get("initialization"):
+        raise ValueError("Candidates must use the same encoder initialization.")
     chosen = min(candidates, key=lambda name: candidates[name]["metrics"]["macro_mae"])
     candidate = candidates[chosen]
     specification = candidate["config"]
     selection = {"selected_head": chosen, "criterion": "lowest macro validation MAE",
                  "validation": {name: run["metrics"] for name, run in candidates.items()},
                  "seed": specification["seed"]}
+    if specification.get("initialization"):
+        selection["initialization"] = specification["initialization"]
+        selection["test_note"] = (
+            "The same frozen test split was reported for a prior IELTS-only baseline. "
+            "This is a comparative held-out evaluation, not a newly unseen test set. "
+            "The transfer experiment and checkpoint selection use validation data only."
+        )
     (output / "selection.json").write_text(json.dumps(selection, indent=2))
     print("Selected using validation only:", chosen, flush=True)
     test = pd.read_parquet(data_dir / "test.parquet")
@@ -157,6 +166,12 @@ def main():
               "A default classification pipeline is not supported."), "",
               "IELTS scores are Writing9 weak-label estimates, not validated examiner scores or a complete IELTS Writing result."
               if args.track == "ielts" else "ELLIPSE proficiency scores are not IELTS bands and must not be rescaled into them.", ""]
+    if specification.get("initialization"):
+        lines += ["", "## Encoder transfer", "",
+                  ("Both candidate heads started from the same ELLIPSE-trained encoder. "
+                  "The six-score ELLIPSE head was discarded; this four-score IELTS head was initialized afresh. "
+                  "See scorer_config.json initialization for the parent checkpoint, hash, and data provenance."),
+                  "", selection["test_note"], ""]
     (release / "README.md").write_text("\n".join(lines))
     print(json.dumps(metrics, indent=2), flush=True)
 

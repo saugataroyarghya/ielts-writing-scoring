@@ -297,6 +297,7 @@ def main():
     parser.add_argument("--source-hash", default="local-development")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--epochs", type=int, default=5)
+    parser.add_argument("--init-checkpoint", help="Frozen ELLIPSE checkpoint; transfer encoder only.")
     args = parser.parse_args()
     output = Path(args.output)
     output.mkdir(parents=True, exist_ok=True)
@@ -324,11 +325,22 @@ def main():
                      "kaggle_dataset_version": pinned_dataset["version"],
                      "dataset_checksums": metadata["prepared_sha256"], "pooling": "mean_essay_tokens",
                      "encoder_lr": 2e-5, "head_lr": 1e-4, "batch_size": 2, "accumulation": 8}
+    if args.init_checkpoint:
+        if args.track != "ielts" or args.encoder != "modernbert":
+            raise ValueError("This frozen transfer experiment targets IELTS with ModernBERT.")
+        transfer = json.loads(Path("configs/transfer.json").read_text())
+        specification["initialization"] = transfer["initialization"]
     (output / "run_config.json").write_text(json.dumps(specification, indent=2))
     if args.mode == "train":
         run_baselines(train, validation, metadata["targets"], args.track, output / "baselines_validation.json")
-    tokenizer = AutoTokenizer.from_pretrained(specification["model_id"], revision=specification["revision"])
-    model = EssayScorer.from_pretrained_encoder(specification).to(device)
+    if args.init_checkpoint:
+        tokenizer = AutoTokenizer.from_pretrained(args.init_checkpoint, local_files_only=True)
+        model = EssayScorer.from_encoder_checkpoint(
+            specification, args.init_checkpoint, specification["initialization"]["checkpoint_sha256"],
+        ).to(device)
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(specification["model_id"], revision=specification["revision"])
+        model = EssayScorer.from_pretrained_encoder(specification).to(device)
     model.encoder.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
     torch.cuda.reset_peak_memory_stats()
     if args.mode == "smoke":

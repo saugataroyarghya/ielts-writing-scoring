@@ -1,5 +1,6 @@
 """A pretrained encoder with either a plain MLP or a small multi-gate MoE."""
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -66,6 +67,27 @@ class EssayScorer(nn.Module):
             specification["model_id"], revision=specification["revision"],
             attn_implementation="sdpa", reference_compile=False,
         )
+        return cls(encoder, specification)
+
+    @classmethod
+    def from_encoder_checkpoint(cls, specification, folder, expected_sha256):
+        """Transfer only encoder weights; initialize a fresh target-task head."""
+        folder = Path(folder)
+        weights = folder / "model.safetensors"
+        with weights.open("rb") as handle:
+            actual = hashlib.file_digest(handle, "sha256").hexdigest()
+        if actual != expected_sha256:
+            raise ValueError("Transfer checkpoint checksum differs from the frozen source.")
+        source = json.loads((folder / "scorer_config.json").read_text())
+        for key in ("model_id", "revision"):
+            if source[key] != specification[key]:
+                raise ValueError(f"Transfer source differs in {key}.")
+        config = AutoConfig.from_pretrained(folder / "encoder_config", local_files_only=True)
+        config.reference_compile = False
+        encoder = AutoModel.from_config(config, attn_implementation="sdpa")
+        state = load_file(str(weights))
+        encoder.load_state_dict({key.removeprefix("encoder."): value for key, value in state.items()
+                                 if key.startswith("encoder.")}, strict=True)
         return cls(encoder, specification)
 
     def forward(self, input_ids, attention_mask, essay_mask=None):

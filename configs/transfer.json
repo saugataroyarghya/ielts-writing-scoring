@@ -1,0 +1,38 @@
+{
+  "experiment": "ellipse-to-ielts-shared-encoder-v1",
+  "initialization": {
+    "method": "supervised ELLIPSE encoder transfer with a fresh IELTS head",
+    "checkpoint": "saugataroyarghya/essay-scoring-ellipse-train/1:mlp/best",
+    "checkpoint_sha256": "9ecc60ab06e497feaca579600f61a3365dc9cd17bfc802c89ac873d37775b2a6",
+    "source_track": "ellipse",
+    "source_head": "mlp",
+    "source_best_epoch": 3,
+    "source_dataset_revision": "dc3b8f0b3b4332fc9f64302c4ccfc4ed582f4b43",
+    "source_train_rows": 3324,
+    "source_validation_rows": 587,
+    "source_selection": "lowest ELLIPSE validation macro MAE; test unused for selection",
+    "transferred_parameters": "encoder only",
+    "head_initialization": "fresh; no ELLIPSE-to-IELTS label mapping"
+  },
+  "heads": ["mlp", "moe"],
+  "seed": 42,
+  "epoch_cap": 5,
+  "selection": "IELTS validation macro MAE, with paired prompt-group bootstrap and latency reported",
+  "baseline_notebook": "saugataroyarghya/essay-scoring-ielts-train/1",
+  "baseline_checkpoint_sha256": {
+    "mlp": "c66a12bcd48476d8f07d1e77111124ae87b0cefa0fec91f551dc0f516b310fa6",
+    "moe": "a50499c97730c631f7285dd7e6f65f4416c7ed8813b4f4e56f0b88d714b09268"
+  },
+  "test_policy": "Prior IELTS test has already been reported for a baseline; reuse is a comparison holdout, not a newly unseen test. No test-based tuning.",
+  "inference_benchmark": {
+    "batch_size": 1,
+    "token_lengths": [256, 512, 1024],
+    "gpu_precisions": ["float32", "float16"],
+    "cpu_precision": "float32",
+    "warmup_per_head": 5,
+    "paired_repetitions": 50,
+    "order": "alternating MLP/MoE and MoE/MLP",
+    "measurements": ["end-to-end warm request", "pretokenized model forward", "head only"],
+    "exclusions": ["network transport", "server queueing", "cold model load"]
+  }
+}

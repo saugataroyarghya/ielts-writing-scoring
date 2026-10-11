@@ -9,6 +9,7 @@ data/
 artifacts/runs/
 artifacts/kaggle-output/
 artifacts/staging/
+artifacts/private-sanity*/
 release/
 .env*
 !.env.example
@@ -17,3 +18,4 @@ release/
 *.pth
 kaggle.json
 .DS_Store
+reports/synthetic_pipeline.lock

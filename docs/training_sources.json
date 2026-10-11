@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "verification": "Archive hashes matched the completed Kaggle outputs before publication. Notebook archives contain source and configuration, not datasets or weights.",
+  "runs": [
+    {
+      "name": "essay-scoring-ellipse-to-ielts-transfer",
+      "notebook": "notebooks/essay-scoring-ellipse-to-ielts-transfer/run.ipynb",
+      "source_bundle_sha256": "30eadcc394fa6776a2a743673f6cfb6d9b83fec21ab8478e617252543a60c2bd",
+      "published_checkpoints": [
+        {
+          "repo_id": "saugataroy/ielts-task2-modernbert-base-mlp",
+          "revision": "8e798005b3f43e205110db422675b2c42ace8a4b"
+        },
+        {
+          "repo_id": "saugataroy/ielts-task2-modernbert-base-moe",
+          "revision": "ad150d954cc9af7fa848fedeafeef6c28c71e2c6"
+        }
+      ],
+      "files_sha256": {
+        "configs/prepared_datasets.json": "ed477ed5f33a82cc0375e76df3943b31d57236a5f3104f90ecc6f0cb20d9d8e5",
+        "configs/sources.json": "0027c6f4189056266f1d4bc9239cd1d2f71b317171fcbb3230d58d59863c2860",
+        "configs/transfer.json": "3662913b3ff6d35ba624e55762a8fc7cc5a4518ada5248bbec5010089e2dac19",
+        "pyproject.toml": "58ae8ab833548a9bcd1eb76ef7b406eb8e512498a9e1a3a447754783fb5a2b3d",
+        "src/ielts_scoring/__init__.py": "89e3c6a1add1736f24745e55e5f50adfc16b274f669d65e2cc80557046571191",
+        "src/ielts_scoring/baselines.py": "b17087840b2ce19e0f4925fdc1318360f1b09151fb22a4af0b2ad5c14fc40f14",
+        "src/ielts_scoring/benchmark.py": "0a7d46af248b1cd31b22a3a857da6d7a82c9970557b9ad3f02ac0a96a697940c",
+        "src/ielts_scoring/data.py": "59faa0d72dc2bdbb17a74e9a10100906cd83ac0f5e419f338f62f3d48bf8b7da",
+        "src/ielts_scoring/diagnostics.py": "167aa70758a6001f89c7c78d3b81d6f4c30c377a22e5084567b33a0622a6a01a",
+        "src/ielts_scoring/evaluate.py": "c7a8be8fd3acf7de9c6d958b68d6f176cbcc52bfccd8a098cded216507aca278",
+        "src/ielts_scoring/finalize.py": "69aa36f9859a7ac18945b6deb9cadc648438932ba9b053b6683bc465fd08823a",
+        "src/ielts_scoring/models.py": "4ac8bbba0cf44d13b93cf2114c3f9b090f9554ce063f63c35269dd932f6869f3",
+        "src/ielts_scoring/predict.py": "8f4f4225445c57891701b5c46951ce963cab9e5be5aafcd531e0faf60e717a90",
+        "src/ielts_scoring/train.py": "854a5ecb34e75e694b8b0769e8730a09404425644660cbf52aaeaf2c7d777ed8",
+        "src/ielts_scoring/transfer.py": "c49bcd4be304c203407ed5f1e8134ab1ccf62923c2277625588f9c610115bd44"
+      }
+    },
+    {
+      "name": "essay-scoring-moe-synthetic-v1",
+      "notebook": "notebooks/essay-scoring-moe-synthetic-v1/run.ipynb",
+      "source_bundle_sha256": "46fab05e09f4d4e46537f39c99c30c2ba8144d0f8ef11270c0ee537df76d21d9",
+      "published_checkpoints": [
+        {
+          "repo_id": "saugataroy/ielts-task2-modernbert-base-moe",
+          "revision": "8ee7aac58ebb4f4cb3f92f58ff33cef25390ddc6"
+        }
+      ],
+      "files_sha256": {
+        "configs/prepared_datasets.json": "ed477ed5f33a82cc0375e76df3943b31d57236a5f3104f90ecc6f0cb20d9d8e5",
+        "configs/sources.json": "0027c6f4189056266f1d4bc9239cd1d2f71b317171fcbb3230d58d59863c2860",
+        "configs/synthetic_moe.json": "1f2baa917e1c26c86462effc82561e9df414010c1e07921291d2942c4122f25a",
+        "configs/transfer.json": "3662913b3ff6d35ba624e55762a8fc7cc5a4518ada5248bbec5010089e2dac19",
+        "src/ielts_scoring/__init__.py": "89e3c6a1add1736f24745e55e5f50adfc16b274f669d65e2cc80557046571191",
+        "src/ielts_scoring/baselines.py": "b17087840b2ce19e0f4925fdc1318360f1b09151fb22a4af0b2ad5c14fc40f14",
+        "src/ielts_scoring/benchmark.py": "0a7d46af248b1cd31b22a3a857da6d7a82c9970557b9ad3f02ac0a96a697940c",
+        "src/ielts_scoring/data.py": "59faa0d72dc2bdbb17a74e9a10100906cd83ac0f5e419f338f62f3d48bf8b7da",
+        "src/ielts_scoring/diagnostics.py": "167aa70758a6001f89c7c78d3b81d6f4c30c377a22e5084567b33a0622a6a01a",
+        "src/ielts_scoring/evaluate.py": "c7a8be8fd3acf7de9c6d958b68d6f176cbcc52bfccd8a098cded216507aca278",
+        "src/ielts_scoring/finalize.py": "69aa36f9859a7ac18945b6deb9cadc648438932ba9b053b6683bc465fd08823a",
+        "src/ielts_scoring/models.py": "4ac8bbba0cf44d13b93cf2114c3f9b090f9554ce063f63c35269dd932f6869f3",
+        "src/ielts_scoring/predict.py": "8f4f4225445c57891701b5c46951ce963cab9e5be5aafcd531e0faf60e717a90",
+        "src/ielts_scoring/synthetic_finetune.py": "b0c714b1783f526a8f119206be832d91ea25ec885799d343532be01912eed06b",
+        "src/ielts_scoring/train.py": "854a5ecb34e75e694b8b0769e8730a09404425644660cbf52aaeaf2c7d777ed8",
+        "src/ielts_scoring/transfer.py": "c49bcd4be304c203407ed5f1e8134ab1ccf62923c2277625588f9c610115bd44"
+      }
+    }
+  ]
+}
