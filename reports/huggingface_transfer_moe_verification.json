@@ -1,0 +1,17 @@
+{
+  "head": "moe",
+  "passed": true,
+  "all_weight_tensors_identical": true,
+  "strict_loading": {
+    "missing_keys": [],
+    "unexpected_keys": [],
+    "mismatched_keys": [],
+    "error_msgs": []
+  },
+  "batch_vs_original_max_score_difference": 9.5367431640625e-07,
+  "cases": 4,
+  "truncation_verified": true,
+  "blank_inputs_rejected": true,
+  "offline": true,
+  "torch": "2.10.0"
+}

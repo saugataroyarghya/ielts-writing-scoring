@@ -1,0 +1,33 @@
+{
+  "track": "ielts_task2",
+  "split": "train",
+  "rows": 7069,
+  "input": "prompt + essay + tokenizer special tokens; no truncation",
+  "source_sha256": "f7a871f0f2d34fcd7f07a2d53701daf94094bc7bb1ec30cfd5a77c3637109cd3",
+  "tokenizer_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+  "tokenizer_sha256": "9fd55248d51d33976b324fc11592e28071da7d41e0e9401dfb7082e30574b7b1",
+  "token_length_percentiles": {
+    "p50": 386.0,
+    "p90": 465.0,
+    "p95": 493.0,
+    "p99": 573.3199999999997,
+    "max": 931.0
+  },
+  "limits": {
+    "1024": {
+      "fits": 7069,
+      "exceeds": 0,
+      "fit_percent": 100.0
+    },
+    "2048": {
+      "fits": 7069,
+      "exceeds": 0,
+      "fit_percent": 100.0
+    },
+    "8192": {
+      "fits": 7069,
+      "exceeds": 0,
+      "fit_percent": 100.0
+    }
+  }
+}

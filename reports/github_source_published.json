@@ -1,0 +1,23 @@
+{
+  "github_repository": "https://github.com/saugataroyarghya/ielts-writing-scoring",
+  "source_commit": "ca8b66cb6c3611b8141c6aeda63da7ac34bc67e3",
+  "github_public": true,
+  "models": [
+    {
+      "repo_id": "saugataroy/ielts-task2-modernbert-base-mlp",
+      "revision": "b6354e80f42831134e5d8c0747b739a42e571eaa",
+      "source_link_targets_verified": 5,
+      "documentation_hashes_verified": true,
+      "weights_sha256": "6871a120be79fa3354d545ec8dc030a1a3833e9f26f4340bd66935b4acb5742b",
+      "weights_unchanged": true
+    },
+    {
+      "repo_id": "saugataroy/ielts-task2-modernbert-base-moe",
+      "revision": "c27e042975c3fb5e4d93ae094fb545e7656554bf",
+      "source_link_targets_verified": 5,
+      "documentation_hashes_verified": true,
+      "weights_sha256": "48f992cafc2aa43b743aed90fac5245d169a791cd24f22e7595334085efa93e6",
+      "weights_unchanged": true
+    }
+  ]
+}

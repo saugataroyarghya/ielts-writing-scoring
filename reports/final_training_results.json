@@ -1,0 +1,354 @@
+{
+  "verified_at_utc": "2026-10-10T04:15:36.710912+00:00",
+  "verified_at_dhaka": "2026-10-10T10:15:36.710912+06:00",
+  "selection_policy": "Lowest macro validation MAE; evaluate only selected checkpoint on the frozen test set",
+  "training_seeds": [
+    42
+  ],
+  "tracks": {
+    "ellipse": {
+      "notebook": "saugataroyarghya/essay-scoring-ellipse-train",
+      "version": 1,
+      "status": "complete",
+      "selected_head": "mlp",
+      "heads": {
+        "mlp": {
+          "best_epoch": 3,
+          "best_validation_mae": 0.38476672768592834,
+          "history": [
+            {
+              "epoch": 1,
+              "training_mse": 0.32226275135320304,
+              "validation_mae": 0.45475538074970245
+            },
+            {
+              "epoch": 2,
+              "training_mse": 0.233272584623665,
+              "validation_mae": 0.3873930871486664
+            },
+            {
+              "epoch": 3,
+              "training_mse": 0.19166205965081134,
+              "validation_mae": 0.38476672768592834
+            },
+            {
+              "epoch": 4,
+              "training_mse": 0.15407475954645664,
+              "validation_mae": 0.39226868748664856
+            },
+            {
+              "epoch": 5,
+              "training_mse": 0.126154909160689,
+              "validation_mae": 0.38617972532908124
+            }
+          ],
+          "runtime": {
+            "seconds": 5531.3115979720005,
+            "epochs": 5,
+            "peak_gpu_memory_gb": 2.9367098808288574
+          }
+        },
+        "moe": {
+          "best_epoch": 5,
+          "best_validation_mae": 0.39187384645144147,
+          "history": [
+            {
+              "epoch": 1,
+              "training_mse": 0.34931118900499525,
+              "validation_mae": 0.4278552681207657
+            },
+            {
+              "epoch": 2,
+              "training_mse": 0.24824813432689655,
+              "validation_mae": 0.39945565660794574
+            },
+            {
+              "epoch": 3,
+              "training_mse": 0.21276538112868376,
+              "validation_mae": 0.39859721064567566
+            },
+            {
+              "epoch": 4,
+              "training_mse": 0.1775836018831243,
+              "validation_mae": 0.40002573033173877
+            },
+            {
+              "epoch": 5,
+              "training_mse": 0.15113732941983649,
+              "validation_mae": 0.39187384645144147
+            }
+          ],
+          "runtime": {
+            "seconds": 5527.767858795,
+            "epochs": 5,
+            "peak_gpu_memory_gb": 2.9331912994384766
+          }
+        }
+      },
+      "baseline_validation_mae": 0.43844574330090885,
+      "selected_validation_improvement_percent": 12.243023551979192,
+      "test_metrics": {
+        "Cohesion": {
+          "n": 2571,
+          "mae": 0.39203494787216187,
+          "rmse": 0.4930115342140198,
+          "bias": 0.06271878629922867
+        },
+        "Syntax": {
+          "n": 2571,
+          "mae": 0.36094599962234497,
+          "rmse": 0.45771458745002747,
+          "bias": -0.010589872486889362
+        },
+        "Vocabulary": {
+          "n": 2571,
+          "mae": 0.3368278443813324,
+          "rmse": 0.4231039881706238,
+          "bias": 0.08759359270334244
+        },
+        "Phraseology": {
+          "n": 2571,
+          "mae": 0.3642430007457733,
+          "rmse": 0.4569554030895233,
+          "bias": 0.03452571853995323
+        },
+        "Grammar": {
+          "n": 2571,
+          "mae": 0.38879266381263733,
+          "rmse": 0.4801875352859497,
+          "bias": 0.10616917163133621
+        },
+        "Conventions": {
+          "n": 2571,
+          "mae": 0.3721557855606079,
+          "rmse": 0.4609699845314026,
+          "bias": -0.002424883423373103
+        },
+        "macro_mae": 0.36916670699914295,
+        "macro_rmse": 0.46199050545692444,
+        "macro_mae_95ci": {
+          "lower": 0.36319625500372754,
+          "upper": 0.37435118671398937,
+          "groups": 2571,
+          "draws": 1000,
+          "interpretation": "Test-group sampling uncertainty for this checkpoint; not training-seed uncertainty."
+        },
+        "out_of_range_predictions": 0,
+        "qwk": null,
+        "qwk_note": "Not reported until a source-verified discrete rating grid is recorded; no arbitrary rounding."
+      },
+      "cpu_inference_check": {
+        "passed": true,
+        "max_difference_from_gpu": 0.007126808166503906,
+        "source": "fresh staged checkpoint loaded locally without network"
+      },
+      "diagnostics": {
+        "original": {
+          "Cohesion": 3.234375,
+          "Syntax": 3.09375,
+          "Vocabulary": 3.3125,
+          "Phraseology": 3.125,
+          "Grammar": 3.265625,
+          "Conventions": 3.28125
+        },
+        "reversed_paragraphs": {
+          "Cohesion": 3.1875,
+          "Syntax": 3.0625,
+          "Vocabulary": 3.265625,
+          "Phraseology": 3.09375,
+          "Grammar": 3.25,
+          "Conventions": 3.25
+        },
+        "repeated_first_paragraph": {
+          "Cohesion": 3.234375,
+          "Syntax": 3.078125,
+          "Vocabulary": 3.296875,
+          "Phraseology": 3.09375,
+          "Grammar": 3.21875,
+          "Conventions": 3.234375
+        },
+        "short_answer": {
+          "Cohesion": 2.4375,
+          "Syntax": 2.3125,
+          "Vocabulary": 2.59375,
+          "Phraseology": 2.21875,
+          "Grammar": 2.53125,
+          "Conventions": 2.9375
+        },
+        "note": "Controlled cases only; these are not human-scored test examples."
+      },
+      "notebook_log_duration_seconds": 5929.334195493,
+      "duration_note": "Elapsed time of last persisted notebook log event; excludes queue time.",
+      "release_bundle": "Staged in private Kaggle notebook outputs; local download includes metrics and logs only."
+    },
+    "ielts": {
+      "notebook": "saugataroyarghya/essay-scoring-ielts-train",
+      "version": 1,
+      "status": "complete",
+      "selected_head": "moe",
+      "heads": {
+        "mlp": {
+          "best_epoch": 3,
+          "best_validation_mae": 1.0822232514619827,
+          "history": [
+            {
+              "epoch": 1,
+              "training_mse": 3.0927998408820643,
+              "validation_mae": 1.2790938168764114
+            },
+            {
+              "epoch": 2,
+              "training_mse": 2.2700132455527657,
+              "validation_mae": 1.188725784420967
+            },
+            {
+              "epoch": 3,
+              "training_mse": 1.7927442867156556,
+              "validation_mae": 1.0822232514619827
+            },
+            {
+              "epoch": 4,
+              "training_mse": 1.4192399200210646,
+              "validation_mae": 1.1000561118125916
+            },
+            {
+              "epoch": 5,
+              "training_mse": 1.15182606930071,
+              "validation_mae": 1.1082969009876251
+            }
+          ],
+          "runtime": {
+            "seconds": 7764.984816398,
+            "epochs": 5,
+            "peak_gpu_memory_gb": 2.902784824371338
+          }
+        },
+        "moe": {
+          "best_epoch": 4,
+          "best_validation_mae": 1.065749078989029,
+          "history": [
+            {
+              "epoch": 1,
+              "training_mse": 3.3286027820634105,
+              "validation_mae": 1.3189390301704407
+            },
+            {
+              "epoch": 2,
+              "training_mse": 2.29168030294574,
+              "validation_mae": 1.1515388935804367
+            },
+            {
+              "epoch": 3,
+              "training_mse": 1.8032335698781652,
+              "validation_mae": 1.074233517050743
+            },
+            {
+              "epoch": 4,
+              "training_mse": 1.4627773615709878,
+              "validation_mae": 1.065749078989029
+            },
+            {
+              "epoch": 5,
+              "training_mse": 1.2005485462356549,
+              "validation_mae": 1.0713241398334503
+            }
+          ],
+          "runtime": {
+            "seconds": 7610.503730560999,
+            "epochs": 5,
+            "peak_gpu_memory_gb": 2.8967881202697754
+          }
+        }
+      },
+      "baseline_validation_mae": 1.389510724050729,
+      "selected_validation_improvement_percent": 23.300406355833204,
+      "test_metrics": {
+        "TR": {
+          "n": 450,
+          "mae": 1.2229167222976685,
+          "rmse": 1.5052454471588135,
+          "bias": -0.08124999701976776,
+          "within_half_count": 116,
+          "within_one_count": 224
+        },
+        "CC": {
+          "n": 450,
+          "mae": 1.0257638692855835,
+          "rmse": 1.3259880542755127,
+          "bias": 0.15062500536441803,
+          "within_half_count": 166,
+          "within_one_count": 276
+        },
+        "LR": {
+          "n": 450,
+          "mae": 0.9971180558204651,
+          "rmse": 1.399814486503601,
+          "bias": 0.1382986158132553,
+          "within_half_count": 193,
+          "within_one_count": 273
+        },
+        "GRA": {
+          "n": 450,
+          "mae": 1.1545486450195312,
+          "rmse": 1.5984596014022827,
+          "bias": -0.07371527701616287,
+          "within_half_count": 171,
+          "within_one_count": 241
+        },
+        "macro_mae": 1.100086823105812,
+        "macro_rmse": 1.4573768973350525,
+        "macro_mae_95ci": {
+          "lower": 1.008774322724294,
+          "upper": 1.2527756145029416,
+          "groups": 23,
+          "draws": 1000,
+          "interpretation": "Test-group sampling uncertainty for this checkpoint; not training-seed uncertainty."
+        },
+        "out_of_range_predictions": 0,
+        "qwk": null,
+        "qwk_note": "Not reported until a source-verified discrete rating grid is recorded; no arbitrary rounding."
+      },
+      "cpu_inference_check": {
+        "passed": true,
+        "max_difference_from_gpu": 0.018256187438964844,
+        "source": "fresh staged checkpoint loaded locally without network"
+      },
+      "diagnostics": {
+        "original": {
+          "TR": 6.0,
+          "CC": 6.1875,
+          "LR": 4.75,
+          "GRA": 4.875
+        },
+        "reversed_paragraphs": {
+          "TR": 5.25,
+          "CC": 5.75,
+          "LR": 4.8125,
+          "GRA": 4.84375
+        },
+        "repeated_first_paragraph": {
+          "TR": 5.5625,
+          "CC": 5.90625,
+          "LR": 4.625,
+          "GRA": 5.15625
+        },
+        "short_answer": {
+          "TR": 4.71875,
+          "CC": 4.34375,
+          "LR": 7.21875,
+          "GRA": 7.0625
+        },
+        "different_question": {
+          "TR": 5.9375,
+          "CC": 6.21875,
+          "LR": 4.65625,
+          "GRA": 4.6875
+        },
+        "note": "Controlled cases only; these are not human-scored test examples."
+      },
+      "notebook_log_duration_seconds": 7969.785002615,
+      "duration_note": "Elapsed time of last persisted notebook log event; excludes queue time.",
+      "release_bundle": "Staged in private Kaggle notebook outputs; local download includes metrics and logs only."
+    }
+  }
+}

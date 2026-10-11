@@ -1,0 +1,16 @@
+{
+  "repo_id": "saugataroy/ielts-task2-synthetic-v1",
+  "revision": "067d907b930a8711a4c9888a2258ede3fb99b83e",
+  "public": true,
+  "files_verified": 15,
+  "counts": {
+    "train": 976,
+    "synthetic_validation": 98,
+    "synthetic_diagnostic": 120,
+    "quarantine": 6
+  },
+  "all_checksums_match": true,
+  "initial_revision": "0969be6c9b1446a8ae13f5fdabba616dbe4f4311",
+  "license": "cc-by-4.0",
+  "licensed_revision_files_verified": true
+}

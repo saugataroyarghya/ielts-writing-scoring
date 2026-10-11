@@ -19,3 +19,13 @@ release/
 kaggle.json
 .DS_Store
 reports/synthetic_pipeline.lock
+
+# Mutable run state and machine-specific packaging/checkpoint receipts.
+# Durable aggregate results and verification reports remain versioned.
+/reports/run_status.json
+/reports/live_*_progress.json
+/reports/*_pending_completion.json
+/reports/synthetic_pipeline_status.json
+/reports/synthetic_moe_preflight.json
+/reports/*_packages.json
+/reports/*_local_checkpoint.json

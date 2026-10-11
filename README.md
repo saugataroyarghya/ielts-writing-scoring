@@ -12,6 +12,8 @@ received synthetic-data continuation.
 | Synthetic dataset and dataset card | [Hugging Face](https://huggingface.co/datasets/saugataroy/ielts-task2-synthetic-v1) |
 | Training instructions and reproduction boundaries | [docs/training.md](docs/training.md) |
 | Recorded training source hashes | [docs/training_sources.json](docs/training_sources.json) |
+| Supporting scripts and file policy | [docs/repository-files.md](docs/repository-files.md) |
+| Recorded results and verification | [reports/README.md](reports/README.md) |
 | BentoML inference and benchmarking project | [ielts-inference-api](https://github.com/saugataroyarghya/ielts-inference-api) |
 
 ## Input and output
@@ -48,9 +50,9 @@ python scripts/verify_training_sources.py
 ```
 
 See [training instructions](docs/training.md) for environment setup, commands,
-private-data prerequisites, and exact-reproduction limitations. The existing
-`PLAN.md`, earlier notebooks, and reports are historical experiment records;
-the linked model cards describe the published checkpoints.
+private-data prerequisites, and exact-reproduction limitations. `PLAN.md` records
+the current scope; earlier notebooks and reports preserve historical experiments.
+The linked model cards describe the published checkpoints.
 
 ## Evaluation scope
 

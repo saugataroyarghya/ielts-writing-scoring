@@ -1,0 +1,30 @@
+{
+  "model_revision": "8ee7aac58ebb4f4cb3f92f58ff33cef25390ddc6",
+  "public": true,
+  "weights_sha256": "48f992cafc2aa43b743aed90fac5245d169a791cd24f22e7595334085efa93e6",
+  "selected_epoch": 5,
+  "evaluation": {
+    "original_validation": {
+      "baseline_macro_mae": 1.0468011647462845,
+      "candidate_macro_mae": 1.10605950653553
+    },
+    "synthetic_validation": {
+      "baseline_macro_mae": 1.9343112111091614,
+      "candidate_macro_mae": 0.8699377924203873
+    },
+    "original_test": {
+      "baseline_macro_mae": 1.1288975775241852,
+      "candidate_macro_mae": 1.196770817041397
+    },
+    "synthetic_diagnostic": {
+      "baseline_macro_mae": 1.878841146826744,
+      "candidate_macro_mae": 0.8421549573540688
+    }
+  },
+  "public_checkpoint_files_verified": true,
+  "repo_id": "saugataroy/ielts-task2-modernbert-base-moe",
+  "parent_revision": "ad150d954cc9af7fa848fedeafeef6c28c71e2c6",
+  "dataset_revision": "067d907b930a8711a4c9888a2258ede3fb99b83e",
+  "plain_head_updated": false,
+  "private_sanity_published": false
+}

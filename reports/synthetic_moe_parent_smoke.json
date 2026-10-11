@@ -1,0 +1,6 @@
+{
+  "strict_parent_load": true,
+  "all_tensors_identical": true,
+  "finite_rubric_forward": true,
+  "weight_sha256": "520bff09afeef6ed8fb8871879adc6e0c82f9d7d92ca64bf6369123a230e09d1"
+}

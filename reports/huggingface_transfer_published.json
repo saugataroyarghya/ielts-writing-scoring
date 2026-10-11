@@ -1,0 +1,56 @@
+[
+  {
+    "head": "mlp",
+    "repo_id": "saugataroy/ielts-task2-modernbert-base-mlp",
+    "url": "https://huggingface.co/saugataroy/ielts-task2-modernbert-base-mlp",
+    "revision": "8e798005b3f43e205110db422675b2c42ace8a4b",
+    "public": true,
+    "weights_bytes": 600326152,
+    "weights_sha256": "6871a120be79fa3354d545ec8dc030a1a3833e9f26f4340bd66935b4acb5742b",
+    "public_files_verified": true,
+    "loader_verification": {
+      "head": "mlp",
+      "passed": true,
+      "all_weight_tensors_identical": true,
+      "strict_loading": {
+        "missing_keys": [],
+        "unexpected_keys": [],
+        "mismatched_keys": [],
+        "error_msgs": []
+      },
+      "batch_vs_original_max_score_difference": 1.9073486328125e-06,
+      "cases": 4,
+      "truncation_verified": true,
+      "blank_inputs_rejected": true,
+      "offline": true,
+      "torch": "2.10.0"
+    }
+  },
+  {
+    "head": "moe",
+    "repo_id": "saugataroy/ielts-task2-modernbert-base-moe",
+    "url": "https://huggingface.co/saugataroy/ielts-task2-modernbert-base-moe",
+    "revision": "ad150d954cc9af7fa848fedeafeef6c28c71e2c6",
+    "public": true,
+    "weights_bytes": 600329928,
+    "weights_sha256": "520bff09afeef6ed8fb8871879adc6e0c82f9d7d92ca64bf6369123a230e09d1",
+    "public_files_verified": true,
+    "loader_verification": {
+      "head": "moe",
+      "passed": true,
+      "all_weight_tensors_identical": true,
+      "strict_loading": {
+        "missing_keys": [],
+        "unexpected_keys": [],
+        "mismatched_keys": [],
+        "error_msgs": []
+      },
+      "batch_vs_original_max_score_difference": 9.5367431640625e-07,
+      "cases": 4,
+      "truncation_verified": true,
+      "blank_inputs_rejected": true,
+      "offline": true,
+      "torch": "2.10.0"
+    }
+  }
+]

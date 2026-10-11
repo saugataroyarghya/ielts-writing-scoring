@@ -1,0 +1,27 @@
+{
+  "offline": true,
+  "source_checkpoint_sha256": "9ecc60ab06e497feaca579600f61a3365dc9cd17bfc802c89ac873d37775b2a6",
+  "heads": {
+    "mlp": {
+      "encoder_state_sha256": "0460c414710a3965373eab9191796c9af894c4623db0c979aae7de26f6b10a32",
+      "output_shape": [
+        1,
+        4
+      ],
+      "finite": true,
+      "head_parameters": 1063652,
+      "encoder_trainable": true
+    },
+    "moe": {
+      "encoder_state_sha256": "0460c414710a3965373eab9191796c9af894c4623db0c979aae7de26f6b10a32",
+      "output_shape": [
+        1,
+        4
+      ],
+      "finite": true,
+      "head_parameters": 1063956,
+      "encoder_trainable": true
+    }
+  },
+  "passed": true
+}

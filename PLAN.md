@@ -2,26 +2,42 @@
 
 Created: 2026-10-09
 
-**Goal:** Learn automated essay scoring by training reproducible models, comparing their results, and publishing usable checkpoints on Hugging Face.
+**Goal:** Deliver two IELTS scorers: ModernBERT with a plain MLP head and ModernBERT with an MoE head. Both should benefit from ELLIPSE intermediate training before IELTS fine-tuning. Extend the same two architectures to Academic Task 1, General Training Task 1, and Task 2, with criterion scores and combined estimates. Publish usable checkpoints with reproducible results on Hugging Face when ready.
 
 **Project directory:** `~/Codebase/personal/learning/ielts`
 
-**Current status:** Implementation started on 2026-10-09. Both datasets were prepared in a private Kaggle CPU notebook and published as private version-1 Kaggle datasets. ELLIPSE has 3,324/587/2,571 train/validation/test rows; IELTS has 7,069/529/450. The project implements ModernBERT with plain and MoE regression heads; local correctness tests passed. Both GPU smoke tests passed; the private ELLIPSE and IELTS full comparisons are running. See `reports/run_status.json` for current remote run states and `reports/data_audit.md` for the light preparation report. No Hugging Face model has been published.
+**Current status (2026-10-11):** Two Task 2 models are public on Hugging Face: [plain MLP](https://huggingface.co/saugataroy/ielts-task2-modernbert-base-mlp) and [dense multi-gate MoE](https://huggingface.co/saugataroy/ielts-task2-modernbert-base-moe). Both used ELLIPSE encoder transfer followed by IELTS fine-tuning. The MoE subsequently completed five epochs of continuation using 976 synthetic training rows plus 1,952 fixed original-training replay rows. Synthetic diagnostic macro MAE improved from 1.8788 to 0.8422, while original-test macro MAE worsened from 1.1289 to 1.1968; this is an accepted label-source tradeoff, not established examiner accuracy. The plain model was unchanged. The synthetic dataset is public under CC BY 4.0. Training source is now on [GitHub](https://github.com/saugataroyarghya/ielts-writing-scoring), with both model cards linking to the verified training-source commit. See [recorded reports](reports/README.md) and [training instructions](docs/training.md). Task 1 remains pending. BentoML serving and hardware benchmarks live in [ielts-inference-api](https://github.com/saugataroyarghya/ielts-inference-api).
 
-**Agreed scope update:** Focus on model training with light automated data cleaning. Use Kaggle GPU notebooks, ModernBERT-base first, a four-expert multi-gate MoE comparison, and optional Ettin-150m follow-up. DistilBERT is no longer required. The two tracks remain separate. Prepared outputs were briefly staged locally to create private Kaggle Dataset versions; raw source downloads occurred in the remote preparation job.
+**Agreed scope update:** Focus on model training with light automated data cleaning. Use Kaggle GPU notebooks and compare plain and four-expert MoE heads with the same starting encoder. ELLIPSE is auxiliary training, not an additional final product. Preserve each dataset's labels and scale. Existing standalone experiments are baselines. Prepared outputs were briefly staged locally to create private Kaggle Dataset versions; raw source downloads occurred in the remote preparation job.
+
+**Completed transfer experiment:** `configs/transfer.json` pins the ELLIPSE MLP epoch-3 checkpoint by SHA256. Transfer encoder weights only; freshly initialize both IELTS heads, then train each for at most five epochs with seed 42 and unchanged frozen IELTS splits/hyperparameters. Check cross-corpus exact-essay overlap before training. Compare against direct IELTS fine-tuning on validation data using paired prompt-group bootstrap; report that one seed and validation-selected checkpoints limit certainty. Benchmark both heads on the same idle GPU at 256/512/1,024 tokens, batch one, in FP32 and FP16, before and after training. Use warmups, alternating order, synchronized timings, and p50/p95 request latency. Run question-swap and short-response diagnostics across up to 32 validation groups. The previously reported IELTS test is a comparative holdout, not a newly unseen test. Extend these same two scorers to Task 1 only when suitable labeled data and source context are available.
+
+**Task coverage clarification (2026-10-09):** The user confirmed both Academic and General Training Task 1, in addition to Task 2. Both Task 1 variants are required project scope. The existing datasets, checkpoints, and inference implementation cover ELLIPSE and IELTS Task 2 only. No Task 1 training dataset has been selected or frozen, and no Task 1 model has been trained. The existing experiments remain useful Task 2/general-writing baselines.
 
 ## 1. What we will build
 
-Work toward two distinct releases:
+Work toward these scoring capabilities, with separate evaluations:
 
-1. **English writing proficiency model:** Train on ELLIPSE to predict its six analytic writing scores. This provides practice with human-rated data and a reproducible evaluation.
-2. **IELTS Task 2 practice model:** Train on question–essay pairs to estimate Task Response (TR), Coherence and Cohesion (CC), Lexical Resource (LR), and Grammatical Range and Accuracy (GRA).
+1. **ELLIPSE intermediate training:** Learn its six analytic writing scores, then retain the encoder and replace its head for IELTS. Completed ELLIPSE-only models remain experimental baselines.
+2. **IELTS Task 2 capability in both models:** Train on question–essay pairs to estimate Task Response (TR), Coherence and Cohesion (CC), Lexical Resource (LR), and Grammatical Range and Accuracy (GRA).
+3. **General Training Task 1 capability in the same two models:** Train on complete letter instructions and responses to estimate Task Achievement (TA), CC, LR, and GRA. Preserve recipient, purpose, and required bullet points; condition on the task type.
+4. **Academic Task 1 capability in the same two models:** Train on task type, question, source visual information, and response to estimate TA, CC, LR, and GRA. Include charts, tables, maps, and processes only where suitable labeled examples and source information are available; report coverage by visual type.
 
-Keep the datasets, targets, metrics, and release names separate. ELLIPSE scores are not IELTS bands and must not be converted through simple numerical rescaling.
+Keep dataset targets and evaluation metrics distinct; the final two releases are the plain and MoE IELTS scorers. ELLIPSE scores are not IELTS bands and must not be converted through simple numerical rescaling.
 
-For the IELTS model, return four continuous estimates and their mean. A rounded half-band value can be a display option with a documented rounding rule. Call this a **Task 2 estimate**, not the complete IELTS Writing result, which also requires Task 1. If the source's overall score disagrees with its four subscores, audit the discrepancy; do not silently rewrite the labels.
+For each IELTS response, return the task type, four named continuous criterion estimates, and their mean as a **task estimate**. The current implementation returns Task 2 scores and `task2_mean_estimate` only. Once both task models are available, calculate a combined Writing estimate as `(task1_mean + 2 * task2_mean) / 3` for a complete pair from the same learner and test variant. Do not combine Academic and General Training Task 1 responses or substitute a missing task. Keep intermediate values unrounded; any half-band display rule is separate and documented. If the source's overall score disagrees with its four subscores, audit the discrepancy; do not silently rewrite the labels. See [official criterion weighting](https://ielts.org/take-a-test/preparation-resources/writing-test-resources) and [task weighting](https://ielts.org/take-a-test/test-types/ielts-academic-test/ielts-academic-format-writing).
 
-Initial scope is English, typed essays, and numerical scoring. Add Academic Task 1, handwriting recognition, generated feedback, and multilingual support only after the first releases are evaluated. The model must receive the actual question to assess Task Response.
+Scope is English, typed responses, and numerical scoring for all three IELTS task types. Handwriting recognition, generated feedback, and multilingual support remain later features. Four rubric scores do not imply sentence-level error annotations or explanations. The model must receive the actual question to assess Task Response or Task Achievement.
+
+### Task 1 implementation sequence
+
+1. Finish the existing Task 2 comparison and retain its frozen evaluation. In parallel, identify Task 1 data with complete prompts, response text, criterion labels, and documented label provenance.
+2. Prepare General Training letters first, using the existing ModernBERT plain/MoE training approach with a separate TA/CC/LR/GRA target specification. Validate and report letter performance separately from essays.
+3. For Academic Task 1, start with verified structured source information serialized as text alongside the prompt and response. Charts/tables need values, labels, units, and dates; maps/processes need spatial or sequential relationships. ModernBERT does not read images directly. Image-only sources require a separately verified extraction component or a multimodal approach. Never reconstruct the source from the candidate response or scoring feedback, which could reproduce its errors or leak the labels.
+4. Freeze prompt-family and source-visual groups before training each Task 1 track. Keep repeated letters, essays, and reused visuals together across sources. Select checkpoints and heads on validation data; evaluate final selected models on held-out tests for each task type.
+5. Add explicit task routing and combined Writing estimates after the corresponding models are evaluated. Missing Academic source information must produce an unsupported/incomplete result, not a fabricated TA score or full task mean.
+
+Task 1 records should include `task_type` (`task1_academic` or `task1_general`), complete `prompt`, `response`, available criterion labels, `label_provenance`, and `prompt_group`. Academic records also need `visual_id`, source image/data references, verified structured source content, and its provenance. Unknown labels remain missing; overall-only scores cannot supply four criterion targets. Dataset counts and supported visual types will be recorded after inspection, not inferred from a dataset title.
 
 ## 2. Dataset decisions
 
@@ -32,6 +48,8 @@ Initial scope is English, typed essays, and numerical scoring. Add Academic Task
 | [EWCCE-DATA](https://data.mendeley.com/datasets/cd874w6g5k/1) | 200 scanned essays; IELTS-style criterion scores assigned by two English instructors, according to the authors | Candidate independent human-rated evaluation set | CC BY 4.0. First verify downloadable contents, original prompts, task types, score mapping, and transcription feasibility. Instructors are not established as official IELTS examiners. |
 | [ndtran0101/writing9-ielts-essays](https://huggingface.co/datasets/ndtran0101/writing9-ielts-essays) | 166,075 rows; overall and criterion scores | Optional later experiment on scaling noisy data | Unknown licence; author warns about score quality. Check task mixing and overlap with the smaller Writing9 dataset. |
 | [ASAP 2.0](https://github.com/scrosseye/ASAP_2.0) | Approximately 25,000 source-based school essays; human quality scores | Optional general essay-scoring track | CC BY 4.0; requires its own rubric and source material. Never present it as IELTS scoring. |
+
+**Task 1 source check (2026-10-09; candidates, not selected training data):** The public viewer for [ndtran0101/writing9-ielts-essays](https://huggingface.co/datasets/ndtran0101/writing9-ielts-essays) includes letter and map-description prompts with four criterion columns, but visible examples of both are tagged `essay`. Its displayed schema has no source-visual field. Inspect task types independently and obtain source visuals before accepting Academic examples. The card identifies rewritten examples with only an overall label; exclude those from four-criterion supervision. This is a possible source of General Training letters, with counts, completeness, and label quality still unverified. Its listed license is unknown. The [diminch Task 1 model card](https://huggingface.co/diminch/ielts-task1-grader-ai-v2) does not identify its training dataset, so it does not resolve our data requirement. This limited discovery pass did not establish a ready-to-train source for both Task 1 variants.
 
 The older [10,324-row IELTS dataset](https://huggingface.co/datasets/chillies/IELTS-writing-task-2-evaluation) is not the default. Its owner clarified that bands came from tutors or experienced learners and feedback was model-generated. Criterion scores embedded in that feedback are not verified human annotations. See the [owner's clarification](https://huggingface.co/datasets/chillies/IELTS-writing-task-2-evaluation/discussions/7).
 
@@ -68,7 +86,7 @@ Suggested stack: Python, PyTorch, Transformers, Datasets, scikit-learn, pandas, 
 - [ ] Download exact, pinned dataset revisions and retain source checksums.
 - [ ] Inspect the actual ELLIPSE columns, rubric, score ranges, and supplied splits; do not assume a Kaggle mirror has the same schema.
 - [ ] Create a common record format with `id`, `source`, `source_revision`, `task_type`, `prompt`, `prompt_group`, `essay`, `labels`, and `label_provenance`. Preserve writer IDs only where available and useful for splitting.
-- [ ] For IELTS, map source fields to `TR`, `CC`, `LR`, `GRA`, and optional `overall`. Document why the field named `task_achievement_band` is mapped to TR for Task 2.
+- [ ] For IELTS Task 2, map source fields to `TR`, `CC`, `LR`, `GRA`, and optional `overall`. Document why the field named `task_achievement_band` is mapped to TR for Task 2. Task 1 uses `TA`, `CC`, `LR`, `GRA`, with separate Academic/General Training task types and source requirements.
 - [ ] Validate numeric scores, missing labels, empty text, duplicate IDs, text lengths, and mismatched question–essay pairs. Keep invalid rows and reasons in a quarantine manifest.
 - [ ] Preserve spelling, grammar, casing, and paragraph breaks. Clean transport artefacts such as HTML and line endings without rewriting the essay.
 - [ ] Keep genuinely weak, short, or off-topic attempts when their labels are usable. A blanket 250-word filter would remove part of the scoring problem.
@@ -107,7 +125,7 @@ Run B0–B2 and N1/N2 on ELLIPSE first. Reuse the pipeline for the IELTS track. 
 ### Inputs and outputs
 
 - ELLIPSE: essay text to six analytic scores, using the verified label names and original scale. Overall proficiency is optional and remains a separate target.
-- IELTS: question and essay, separated consistently, to four criterion estimates. Keep the source's overall label for a separate optional one-output experiment if the subscore audit fails.
+- IELTS Task 2: question and essay, separated consistently, to TR/CC/LR/GRA. General Training Task 1: complete letter instructions and response to TA/CC/LR/GRA. Academic Task 1: question, verified source information, and response to TA/CC/LR/GRA. These Task 1 input paths are planned, not implemented. Keep the source's overall label for a separate optional one-output experiment if the subscore audit fails.
 - Use a pretrained encoder with an explicit custom regression head/loss and floating-point labels. Multiple outputs must not accidentally activate classification or multilabel BCE loss. Return raw regression outputs; never softmax the criterion scores. Softmax is used only for the MoE gates.
 - Start with mean squared error; compare Smooth L1 only if outliers justify it. If labels are missing, use an explicit mask and normalise over observed targets. Report errors in the original score units.
 - Start ModernBERT and Ettin at 1,024 tokens; consider 2,048 only if measured truncation supports it. Preserve the complete IELTS question and truncate only the essay when needed. Report truncation and compare on the same held-out essays and a fully covered subset.
@@ -193,10 +211,13 @@ This is a sequence for spare-time work, not a fixed deadline or a scheduled auto
 | --- | --- | --- |
 | 1: Data and baselines | Environment, provenance, audits, frozen splits, B0–B2 | Audit report, split manifest, baseline table |
 | 2: First trained model | ELLIPSE N1, regression tests, error analysis | Reloadable checkpoint and reproducible evaluation |
-| 3: IELTS experiments | Audit labels, train N1/N2, compare direct training with optional transfer | Task 2 results with label-quality and external-evaluation limitations |
-| 4: Public release | Resolve licences, select checkpoints, build cards, verify fresh downloads | Public Hugging Face model links and reproducible code |
+| 3: IELTS Task 2 experiments | Audit labels, train N1/N2, compare direct training with optional transfer | Task 2 results with label-quality and external-evaluation limitations |
+| 4: General Training Task 1 | Select letter data, freeze splits, train and compare heads | Held-out TA/CC/LR/GRA results and a reloadable letter scorer |
+| 5: Academic Task 1 | Obtain labeled responses and source visuals/data, verify structured input, train and compare heads | Held-out scores by supported visual type, including source-grounded TA |
+| 6: Complete scoring interface | Route all three task types and aggregate complete Task 1/Task 2 pairs | Four criterion estimates per response, task means, combined Writing estimate |
+| 7: Public release | Resolve licences, select checkpoints, build cards, verify fresh downloads | Public Hugging Face model links with explicit task coverage and reproducible code |
 
-If time is limited, complete one good ELLIPSE model and one IELTS experiment before scaling data or adding feedback generation. A large model sweep is optional.
+Prioritize the existing Task 2 result and then both Task 1 variants over further ELLIPSE experiments or a large model sweep. Generated feedback is optional later work. Partial releases must state exactly which task types they support; the complete project requires both Task 1 variants.
 
 ## 10. First implementation session
 
@@ -215,4 +236,4 @@ If time is limited, complete one good ELLIPSE model and one IELTS experiment bef
 - [Transformers ModernBERT documentation](https://huggingface.co/docs/transformers/model_doc/modernbert)
 - [Hugging Face CLI documentation](https://huggingface.co/docs/huggingface_hub/guides/cli)
 
-Dataset counts above come from the completed preparation job. Model performance and GPU runtime remain unmeasured until the corresponding runs complete. Training settings are initial experimental choices.
+Dataset counts come from the completed preparation job. The first ModernBERT comparisons and their runtime/results are recorded in `reports/final_training_results.json`. Future model or training changes must be selected on validation data; the already evaluated test sets are not fresh holdouts for adaptive experimentation.

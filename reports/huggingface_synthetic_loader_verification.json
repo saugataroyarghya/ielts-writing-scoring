@@ -1,0 +1,11 @@
+{
+  "repo_id": "saugataroy/ielts-task2-synthetic-v1",
+  "revision": "067d907b930a8711a4c9888a2258ede3fb99b83e",
+  "default_counts": {
+    "train": 976,
+    "synthetic_validation": 98,
+    "synthetic_diagnostic": 120
+  },
+  "quarantine_rows": 6,
+  "load_dataset_passed": true
+}
